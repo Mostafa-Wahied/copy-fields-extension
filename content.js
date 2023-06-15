@@ -41,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Add the submit event listener code here
-const form = document.querySelector('div[ng-form="orderParamsForm"]'); // Replace 'div[ng-form="orderParamsForm"]' with the appropriate selector for the form on window 2
+// Add the submit event listener code here for window 2 (eimmt) to log the value of #priorityComboboxInput
+const form = document.querySelector('div[ng-form="orderParamsForm"]');
 if (form) {
     console.log('Form element found:', form);
     form.addEventListener('submit', (event) => {
@@ -104,7 +104,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     // Handle the date and time splitting for customerRequestDate
                     if (mapping.destination === '#customerRequestTime') {
                         const [dateString, timeString] = value.split(' ');
-                        console.log('time value', value);
+                        // console.log('time value', value);
                         if (mapping.destination === '#customerRequestTime') {
                             value = timeString;
                         }
@@ -112,13 +112,10 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     // Handle the date and time splitting for orderTime
                     if (mapping.destination === '#orderTime') {
                         const [dateString, timeString] = value.split(' ');
-                        console.log('time value', value);
                         if (mapping.destination === '#orderTime') {
                             value = timeString;
                         }
                     }
-                    
-
 
                     sourceFields[mapping.destination] = value;
                 }
@@ -135,6 +132,20 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     const optionToSelect = Array.from(destinationElement.options).find(option => option.value === destinationFields[mapping.destination]);
                     if (optionToSelect) {
                         optionToSelect.selected = true;
+
+                // // Set the value of dropdown fields by selecting the corresponding option
+                // if (destinationElement.tagName === 'SELECT') {
+                //     const selectedIndex = Array.from(destinationElement.options).findIndex(option => option.value === destinationFields[mapping.destination]);
+                //     if (selectedIndex !== -1) {
+                //         destinationElement.selectedIndex = selectedIndex;
+                //         // Update the corresponding input element for custom combobox
+                //         const inputElementId = mapping.destination.replace('#', '#') + 'ComboboxInput';
+                //         console.log('inputElementId', inputElementId);
+                //         const inputElement = document.querySelector(inputElementId);
+                //         console.log('inputElement', inputElement);
+                //         if (inputElement) {
+                //             inputElement.value = destinationFields[mapping.destination];
+                //         }
 
                         // Dispatch a change event to simulate a user selection
                         const changeEvent = new Event('change', { bubbles: true, cancelable: true });
