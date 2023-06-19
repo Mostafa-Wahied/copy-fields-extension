@@ -2,28 +2,52 @@
 <html>
 
 <head>
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
         body {
-            width: 300px;
+            width: 250px;
             font-family: Arial, sans-serif;
-        }
-
-        button {
-            margin-top: 10px;
         }
     </style>
 </head>
 
 <body>
-    <h1>Field Copier</h1>
-    <label for="bemsId">BEMSID:</label>
-    <input type="text" id="bemsId" />
-    <br />
-    <label for="siteRequesting">SITE Requesting:</label>
-    <input type="text" id="siteRequesting" />
-    <br />
-    <p>Click the button to copy fields</p>
-    <button id="copyFields">Copy Fields</button>
+    <div id="popupContainer" class="container p-3" style="font-family: 'Roboto', sans-serif; font-size: 0.9rem;">
+        <p class="fw-bolder">EIMMET Field Copier</p>
+        <div class="mb-3">
+            <label for="bemsId" class="form-label">BEMSID:</label>
+            <input type="text" class="form-control" id="bemsId" />
+        </div>
+        <div class="mb-3">
+            <label for="siteRequesting" class="form-label">SITE Requesting:</label>
+            <input type="text" class="form-control" id="siteRequesting" />
+        </div>
+        <hr />
+        <div class="mb-3">
+            <select id="processDropdown" class="form-select">
+                <option value="AdHoc">Ad Hoc</option>
+                <option value="Hardcopy">Hardcopy</option>
+            </select>
+        </div>
+        <div id="hardcopyOptions" style="display: none;">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="dragAndDropCheckbox" />
+                <label for="dragAndDropCheckbox" class="form-check-label">Drag & Drop</label>
+            </div>
+        </div>
+        <p>Click the button to copy fields</p>
+        <button id="copyFields" class="btn btn-primary" style="font-family: 'Roboto', sans-serif; font-size: 0.9rem;">Copy Fields</button>
+    </div>
+    <!-- bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
     <script src="popup.js"></script>
 </body>
 

@@ -1,4 +1,5 @@
-const fieldMappings = [
+console.log('content.js loaded');
+const adHocFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(2)', destination: '#drawingNumber' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(4)', destination: '#sheetId' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(5)', destination: '#revision' },
@@ -34,6 +35,11 @@ const fieldMappings = [
     },
 ];
 
+const hardcopyFieldsMappings = [
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) > td:nth-child(1) span', destination: '#drawingNumber' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(4)', destination: '#sheetId' },
+];
+
 document.addEventListener('DOMContentLoaded', () => {
     const button = document.querySelector('#copyFields');
     if (button) {
@@ -61,9 +67,34 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Message received:', message);
 
     if (message.command === 'getSourceFields') {
-        const { bemsId, siteRequesting } = message;
+        const { bemsId, siteRequesting, selectedProcess, isDragAndDropChecked } = message;
         const sourceFields = {};
-        fieldMappings.forEach((mapping) => {
+        getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropChecked, sourceFields);
+        sendResponse({ sourceFields });
+    } else if (message.command === 'setDestinationFields') {
+        const { destinationFields, selectedProcess, isDragAndDropChecked } = message;
+        setDestinationFields(destinationFields, selectedProcess, isDragAndDropChecked);
+    } else if (message.command === 'updateProcess') {
+        const { selectedProcess } = message;
+        updateElementsForSelectedProcess(selectedProcess);
+    } else if (message.command === 'updateDragAndDrop') {
+        const { dragAndDropEnabled } = message;
+        updateElementsForDragAndDrop(dragAndDropEnabled);
+    }
+    // Add the getPageType message handler here for defaulting the process dropdown to AdHoc or Hardcopy
+    if (message.command === 'getPageType') {
+        const adHocElement = document.querySelector('body > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > span:nth-child(1) > a:nth-child(1)');
+        const pageType = adHocElement === null ? 'AdHoc' : 'Hardcopy';
+        console.log("from content.js pageType:", pageType)
+        sendResponse({ pageType });
+    }
+});
+
+function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropChecked, sourceFields) {
+    if (selectedProcess === 'AdHoc') {
+        console.log('getSourceFields called with adhoc process')
+        // Implement the logic for the Ad Hoc process
+        adHocFieldsMappings.forEach((mapping) => {
             // Handle the custom function for extension user bemsId and siteRequesting values
             if (mapping.customFunction) {
                 const customValues = mapping.customFunction(bemsId, siteRequesting);
@@ -121,10 +152,52 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 }
             }
         });
-        sendResponse({ sourceFields });
-    } else if (message.command === 'setDestinationFields') {
-        const { destinationFields } = message;
-        fieldMappings.forEach((mapping) => {
+    } else if (selectedProcess === 'Hardcopy') {
+        // Implement the logic for the Hardcopy process
+        // check if isDragAndDropChecked is true
+        if (isDragAndDropChecked) {
+            // Implement the logic for the drag and drop option
+            console.log('Drag and drop option selected');
+        } else {
+            console.log('Drag and drop option not selected');
+            hardcopyFieldsMappings.forEach((mapping) => {
+                const sourceElement = document.querySelector(mapping.source);
+                if (sourceElement) {
+                    let value = sourceElement.textContent.trim();
+
+                    // // Handle the conditional mapping for the specific source field
+                    // if (mapping.source === 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) > td:nth-child(2) span select option:checked') {
+                    //     if (value === 'S') {
+                    //         value = 'ST LOUIS';
+                    //     } else if (value === 'A') {
+                    //         value = 'SEATTLE';
+                    //     } else if (value === 'E') {
+                    //         value = 'EVERETT';
+                    //     }
+                    // }
+
+                    // // Handle the conditional mapping if #suppCode is empty
+                    // if (mapping.destination === '#suppCode' && !value) {
+                    //     mapping.source = 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) > td:nth-child(4)'
+                    // }
+
+                    // // Handle the conditional mapping if disclosureValueComboboxInput contains COM or MIL
+                    // if (mapping.destination === '#disclosureValueComboboxInput' && value.includes('COM')) {
+                    //     value = 'COM';
+                    // } else if (mapping.destination === '#disclosureValueComboboxInput' && value.includes('MIL')) {
+                    //     value = 'MIL';
+                    // }
+
+                    sourceFields[mapping.destination] = value;
+                }
+            });
+        }
+    }
+}
+
+function setDestinationFields(destinationFields, selectedProcess, isDragAndDropChecked) {
+    if (selectedProcess === 'AdHoc') {
+        adHocFieldsMappings.forEach((mapping) => {
             const destinationElement = document.querySelector(mapping.destination);
             if (destinationElement && destinationFields[mapping.destination]) {
                 // Set the value of dropdown fields by selecting the corresponding option
@@ -132,20 +205,6 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     const optionToSelect = Array.from(destinationElement.options).find(option => option.value === destinationFields[mapping.destination]);
                     if (optionToSelect) {
                         optionToSelect.selected = true;
-
-                // // Set the value of dropdown fields by selecting the corresponding option
-                // if (destinationElement.tagName === 'SELECT') {
-                //     const selectedIndex = Array.from(destinationElement.options).findIndex(option => option.value === destinationFields[mapping.destination]);
-                //     if (selectedIndex !== -1) {
-                //         destinationElement.selectedIndex = selectedIndex;
-                //         // Update the corresponding input element for custom combobox
-                //         const inputElementId = mapping.destination.replace('#', '#') + 'ComboboxInput';
-                //         console.log('inputElementId', inputElementId);
-                //         const inputElement = document.querySelector(inputElementId);
-                //         console.log('inputElement', inputElement);
-                //         if (inputElement) {
-                //             inputElement.value = destinationFields[mapping.destination];
-                //         }
 
                         // Dispatch a change event to simulate a user selection
                         const changeEvent = new Event('change', { bubbles: true, cancelable: true });
@@ -160,5 +219,58 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 destinationElement.dispatchEvent(inputEvent);
             }
         });
+    } else if (selectedProcess === 'Hardcopy') {
+        // Implement the logic for the Hardcopy process
+        // check if isDragAndDropChecked is true
+        if (isDragAndDropChecked) {
+            // Implement the logic for the drag and drop option
+            console.log('Drag and drop option selected');
+        } else {
+            console.log('Drag and drop option not selected');
+            hardcopyFieldsMappings.forEach((mapping) => {
+                const destinationElement = document.querySelector(mapping.destination);
+                if (destinationElement && destinationFields[mapping.destination]) {
+                    // Set the value of dropdown fields by selecting the corresponding option
+                    if (destinationElement.tagName === 'SELECT') {
+                        const optionToSelect = Array.from(destinationElement.options).find(option => option.value === destinationFields[mapping.destination]);
+                        if (optionToSelect) {
+                            optionToSelect.selected = true;
+
+                            // Dispatch a change event to simulate a user selection
+                            const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+                            destinationElement.dispatchEvent(changeEvent);
+                        }
+                    } else {
+                        destinationElement.value = destinationFields[mapping.destination];
+                    }
+
+                    // Dispatch an input event to simulate user input
+                    const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+                    destinationElement.dispatchEvent(inputEvent);
+                }
+            });
+        }
     }
-});
+}
+
+function updateElementsForSelectedProcess(selectedProcess) {
+    console.log('updateElementsForSelectedProcess called with:', selectedProcess);
+    if (selectedProcess === 'AdHoc') {
+        // Implement the logic for the Ad Hoc process
+        console.log('Ad Hoc process selected');
+    } else if (selectedProcess === 'Hardcopy') {
+        // Implement the logic for the Hardcopy process
+        console.log('Hardcopy process selected');
+    }
+}
+
+function updateElementsForDragAndDrop(dragAndDropEnabled) {
+    console.log('updateElementsForDragAndDrop called with:', dragAndDropEnabled);
+    if (dragAndDropEnabled) {
+        // Implement the logic for enabling the drag and drop option
+        console.log('Drag and drop enabled');
+    } else {
+        // Implement the logic for disabling the drag and drop option
+        console.log('Drag and drop disabled');
+    }
+}
