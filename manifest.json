@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Eimmet Field Copier",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Copy fields between two Firefox windows",
   "icons": {
     "48": "icon.png"

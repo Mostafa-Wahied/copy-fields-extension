@@ -2,7 +2,10 @@
     "addons": {
         "eimmet-field-copier@mostafa-wahied": {
             "updates": [
-                
+                {
+                    "version": "1.0.1",
+                    "update_link": ""
+                }
             ]
         }
     }
