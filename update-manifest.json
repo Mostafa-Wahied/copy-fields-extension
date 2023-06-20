@@ -1,0 +1,12 @@
+{
+    "addons": {
+        "eimmet-field-copier@mostafa-wahied": {
+            "updates": [
+                {
+                    "version": "1.0",
+                    "update_link": "https://github.com/Mostafa-Wahied/copy-fields-extension/releases/download/v1.0/eimmet-field-copier.zip"
+                }
+            ]
+        }
+    }
+}

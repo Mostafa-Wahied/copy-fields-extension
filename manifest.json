@@ -24,5 +24,11 @@
         "content.js"
       ]
     }
-  ]
+  ],
+  "applications": {
+    "gecko": {
+      "id": "eimmet-field-copier@mostafa-wahied",
+      "update_url": "<URL>"
+    }
+  }
 }
