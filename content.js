@@ -9,6 +9,8 @@ const adHocFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(4)', destination: '#disclosureValueComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) td:nth-child(12) span select option:checked', destination: '#sitePerformingLocComboboxInput' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#deliverTo' },
     {
         destination: '#customerRequestDate',
         customFunction: () => {
@@ -44,6 +46,8 @@ const hardcopyFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) td:nth-child(11) span select option:checked', destination: '#sitePerformingLocComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(8)', destination: '#airplaneModelComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(11)', destination: '#otherSys' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#deliverTo' },
     {
         destination: '#revision',
         customFunction: () => {
@@ -89,6 +93,8 @@ const dragNDropFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(11)', destination: '#otherSys' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(15)', destination: '#customerRequestTime' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(15)', destination: '#orderTime' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#deliverTo' },
     {
         destination: '#drawingNumber',
         customFunction: () => {
@@ -261,6 +267,33 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                             value = timeString;
                         }
                     }
+                    // Handle buLocDept to only get the buLocDept value
+                    if (mapping.destination === '#buLocDept') {
+                        budget = value.split(',');
+                        // value = budget[budget.length - 1].trim();
+                        for (let i = 0; i < budget.length; i++) {
+                            let element = budget[i].trim();
+                            if (element.includes("-") && element.split("-").length === 3) {
+                                value = element;
+                                console.log('buLocDept', value);
+                                break;
+                            }
+                        }
+                    }
+                    // Handle deliverTo to only get the mailstop value
+                    if (mapping.destination === '#deliverTo') {
+                        budget = value.split(',');
+                        for (let i = 0; i < budget.length; i++) {
+                            let element = budget[i].trim();
+                            if (element.includes("-") && element.split("-").length === 2) {
+                                value = element;
+                                console.log('deliverTo', value);
+                                break;
+                            } else {
+                                value = ' ';
+                            }
+                        }
+                    }
 
                     sourceFields[mapping.destination] = value;
                 }
@@ -325,6 +358,31 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                                 value = timeString;
                             }
                         }
+                        // Handle buLocDept to only get the buLocDept value
+                        if (mapping.destination === '#buLocDept') {
+                            budget = value.split(',');
+                            // value = budget[budget.length - 1].trim();
+                            for (let i = 0; i < budget.length; i++) {
+                                let element = budget[i].trim();
+                                if (element.includes("-") && element.split("-").length === 3) {
+                                    value = element;
+                                    console.log('buLocDept', value);
+                                    break;
+                                }
+                            }
+                        }
+                        // Handle deliverTo to only get the mailstop value
+                        if (mapping.destination === '#deliverTo') {
+                            budget = value.split(',');
+                            for (let i = 0; i < budget.length; i++) {
+                                let element = budget[i].trim();
+                                if (element.includes("-") && element.split("-").length === 2) {
+                                    value = element;
+                                    console.log('deliverTo', value);
+                                    break;
+                                }
+                            }
+                        }
 
                         sourceFields[mapping.destination] = value;
                     }
@@ -383,6 +441,31 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                             const [dateString, timeString] = value.split(' ');
                             if (mapping.destination === '#orderTime') {
                                 value = timeString;
+                            }
+                        }
+                        // Handle buLocDept to only get the buLocDept value
+                        if (mapping.destination === '#buLocDept') {
+                            budget = value.split(',');
+                            // value = budget[budget.length - 1].trim();
+                            for (let i = 0; i < budget.length; i++) {
+                                let element = budget[i].trim();
+                                if (element.includes("-") && element.split("-").length === 3) {
+                                    value = element;
+                                    console.log('buLocDept', value);
+                                    break;
+                                }
+                            }
+                        }
+                        // Handle deliverTo to only get the mailstop value
+                        if (mapping.destination === '#deliverTo') {
+                            budget = value.split(',');
+                            for (let i = 0; i < budget.length; i++) {
+                                let element = budget[i].trim();
+                                if (element.includes("-") && element.split("-").length === 2) {
+                                    value = element;
+                                    console.log('deliverTo', value);
+                                    break;
+                                }
                             }
                         }
 
