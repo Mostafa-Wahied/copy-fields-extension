@@ -95,6 +95,7 @@ const dragNDropFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(15)', destination: '#orderTime' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#deliverTo' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(2) textarea', destination: '#orderComments' },
     {
         destination: '#drawingNumber',
         customFunction: () => {
@@ -384,6 +385,11 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                                     break;
                                 }
                             }
+                        }
+
+
+                        if (mapping.destination === '#orderComments') {
+                            console.log('orderComments', value);
                         }
 
                         sourceFields[mapping.destination] = value;
