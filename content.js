@@ -6,7 +6,7 @@ const adHocFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(5)', destination: '#suppCode' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(7)', destination: '#otherSys' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(4)', destination: '#airplaneModelComboboxInput' },
-    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(4)', destination: '#disclosureValueComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) td:nth-child(12) span select option:checked', destination: '#sitePerformingLocComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
@@ -42,7 +42,7 @@ const hardcopyFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(4)', destination: '#sheetId' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) > td:nth-child(13)', destination: '#custBemsid' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) > td:nth-child(4)', destination: '#disclosureValueComboboxInput' },
-    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) td:nth-child(11) span select option:checked', destination: '#sitePerformingLocComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(8)', destination: '#airplaneModelComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(11)', destination: '#otherSys' },
@@ -88,7 +88,7 @@ const hardcopyFieldsMappings = [
 const dragNDropFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) > td:nth-child(13)', destination: '#custBemsid' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) > td:nth-child(4)', destination: '#disclosureValueComboboxInput' },
-    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(5) a', destination: '#priorityComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) td:nth-child(11) span select option:checked', destination: '#sitePerformingLocComboboxInput' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(11)', destination: '#otherSys' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(15)', destination: '#customerRequestTime' },
@@ -274,9 +274,11 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                         for (let i = 0; i < budget.length; i++) {
                             let element = budget[i].trim();
                             if (element.includes("-") && element.split("-").length === 3) {
-                                value = element;
-                                console.log('buLocDept', value);
-                                break;
+                                if (element.split("-")[0].length === 2) {
+                                    value = element;
+                                    console.log('buLocDept', value);
+                                    break;
+                                }
                             }
                         }
                     }

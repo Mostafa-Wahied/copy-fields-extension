@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Eimmet Field Copier",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Copy fields between two Firefox windows",
   "icons": {
     "48": "icon.png"
@@ -28,7 +28,7 @@
   "applications": {
     "gecko": {
       "id": "eimmet-field-copier@mostafa-wahied",
-      "update_url": "https://github.com/Mostafa-Wahied/copy-fields-extension/raw/main/update-manifest.json"
+      "update_url": "https://mostafa-wahied.github.io/copy-fields-extension/update-manifest.json"
     }
   }
 }
