@@ -28,7 +28,7 @@
   "applications": {
     "gecko": {
       "id": "eimmet-field-copier@mostafa-wahied",
-      "update_url": "https://github.com/Mostafa-Wahied/copy-fields-extension/raw/main/update-manifest.json"
+      "update_url": "https://mostafa-wahied.github.io/copy-fields-extension/update-manifest.json"
     }
   }
 }
