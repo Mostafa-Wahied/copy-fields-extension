@@ -274,9 +274,11 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                         for (let i = 0; i < budget.length; i++) {
                             let element = budget[i].trim();
                             if (element.includes("-") && element.split("-").length === 3) {
-                                value = element;
-                                console.log('buLocDept', value);
-                                break;
+                                if (element.split("-")[0].length === 2) {
+                                    value = element;
+                                    console.log('buLocDept', value);
+                                    break;
+                                }
                             }
                         }
                     }
