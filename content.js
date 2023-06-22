@@ -290,9 +290,11 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                         for (let i = 0; i < budget.length; i++) {
                             let element = budget[i].trim();
                             if (element.includes("-") && element.split("-").length === 2) {
-                                value = element;
-                                console.log('deliverTo', value);
-                                break;
+                                if (!element.split("-")[0].includes(" ") && !element.split("-")[0].includes(".") && !element.split("-")[1].includes(".")) {
+                                    value = element;
+                                    console.log('deliverTo', value);
+                                    break;
+                                }
                             } else {
                                 value = ' ';
                             }
@@ -384,9 +386,13 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                             for (let i = 0; i < budget.length; i++) {
                                 let element = budget[i].trim();
                                 if (element.includes("-") && element.split("-").length === 2) {
-                                    value = element;
-                                    console.log('deliverTo', value);
-                                    break;
+                                    if (!element.split("-")[0].includes(" ") && !element.split("-")[0].includes(".") && !element.split("-")[1].includes(".")) {
+                                        value = element;
+                                        console.log('deliverTo', value);
+                                        break;
+                                    }
+                                } else {
+                                    value = ' ';
                                 }
                             }
                         }
@@ -477,9 +483,13 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                             for (let i = 0; i < budget.length; i++) {
                                 let element = budget[i].trim();
                                 if (element.includes("-") && element.split("-").length === 2) {
-                                    value = element;
-                                    console.log('deliverTo', value);
-                                    break;
+                                    if (!element.split("-")[0].includes(" ") && !element.split("-")[0].includes(".") && !element.split("-")[1].includes(".")) {
+                                        value = element;
+                                        console.log('deliverTo', value);
+                                        break;
+                                    }
+                                } else {
+                                    value = ' ';
                                 }
                             }
                         }
