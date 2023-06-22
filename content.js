@@ -275,6 +275,7 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                         for (let i = 0; i < budget.length; i++) {
                             let element = budget[i].trim();
                             if (element.includes("-") && element.split("-").length === 3) {
+                                // If the first element is 2 characters long, then it is the buLocDept value
                                 if (element.split("-")[0].length === 2) {
                                     value = element;
                                     console.log('buLocDept', value);
@@ -368,9 +369,12 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                             for (let i = 0; i < budget.length; i++) {
                                 let element = budget[i].trim();
                                 if (element.includes("-") && element.split("-").length === 3) {
-                                    value = element;
-                                    console.log('buLocDept', value);
-                                    break;
+                                    // If the first element is 2 characters long, then it is the buLocDept value
+                                    if (element.split("-")[0].length === 2) {
+                                        value = element;
+                                        console.log('buLocDept', value);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -458,9 +462,12 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
                             for (let i = 0; i < budget.length; i++) {
                                 let element = budget[i].trim();
                                 if (element.includes("-") && element.split("-").length === 3) {
-                                    value = element;
-                                    console.log('buLocDept', value);
-                                    break;
+                                    // If the first element is 2 characters long, then it is the buLocDept value
+                                    if (element.split("-")[0].length === 2) {
+                                        value = element;
+                                        console.log('buLocDept', value);
+                                        break;
+                                    }
                                 }
                             }
                         }
