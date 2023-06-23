@@ -13,6 +13,10 @@
                 {
                     "version": "1.0.4",
                     "update_link": "https://mostafa-wahied.github.io/copy-fields-extension/eimmet_field_copier-1.0.4.xpi"
+                },
+                {
+                    "version": "1.0.5",
+                    "update_link": "https://mostafa-wahied.github.io/copy-fields-extension/xpi/eimmet_field_copier-1.0.5.xpi"
                 }
             ]
         }
