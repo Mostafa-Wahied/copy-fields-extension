@@ -30,3 +30,13 @@ The add-on will appear in the top right corner of your browser. If you need help
 
 ### Background
 This project was created as a result of identifying a need to improve the efficiency of my team. The idea for this project came about when I started a new job and noticed that my team was performing repetitive tasks that could be automated. With a background in programming, I saw an opportunity to leverage my skills to create a solution that would make a difference in my own and the team’s day-to-day tasks. The result was Field Copier, an extension that serves as an excellent example of how programming knowledge can be applied to various industries and positions to improve efficiency and productivity.
+
+### Changelog
+V 1.0.5
+- Fix mailstop conflict
+- Change Site Requesting into dropdown
+- Save bemsid input to not have to keep entering it
+
+V 1.0.4
+- Fix budget conflict with phone number
+- Add the comment field in adhoc and dragdrop as a copy field
