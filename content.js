@@ -25,14 +25,14 @@ const adHocFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(16)', destination: '#orderTime' },
     {
         destination: '#ordDeskUser',
-        customFunction: (bemsId, siteRequesting) => {
+        customFunction: (bemsId,selectedSiteRequesting) => {
             return { '#ordDeskUser': bemsId };
         },
     },
     {
         destination: '#siteRequestingComboboxInput',
-        customFunction: (bemsId, siteRequesting) => {
-            return { '#siteRequestingComboboxInput': siteRequesting };
+        customFunction: (bemsId,selectedSiteRequesting) => {
+            return { '#siteRequestingComboboxInput':selectedSiteRequesting };
         },
     },
 ];
@@ -73,14 +73,14 @@ const hardcopyFieldsMappings = [
 
     {
         destination: '#ordDeskUser',
-        customFunction: (bemsId, siteRequesting) => {
+        customFunction: (bemsId,selectedSiteRequesting) => {
             return { '#ordDeskUser': bemsId };
         },
     },
     {
         destination: '#siteRequestingComboboxInput',
-        customFunction: (bemsId, siteRequesting) => {
-            return { '#siteRequestingComboboxInput': siteRequesting };
+        customFunction: (bemsId,selectedSiteRequesting) => {
+            return { '#siteRequestingComboboxInput':selectedSiteRequesting };
         },
     },
 ];
@@ -149,14 +149,14 @@ const dragNDropFieldsMappings = [
 
     {
         destination: '#ordDeskUser',
-        customFunction: (bemsId, siteRequesting) => {
+        customFunction: (bemsId,selectedSiteRequesting) => {
             return { '#ordDeskUser': bemsId };
         },
     },
     {
         destination: '#siteRequestingComboboxInput',
-        customFunction: (bemsId, siteRequesting) => {
-            return { '#siteRequestingComboboxInput': siteRequesting };
+        customFunction: (bemsId,selectedSiteRequesting) => {
+            return { '#siteRequestingComboboxInput':selectedSiteRequesting };
         },
     },
 ];
@@ -188,9 +188,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Message received:', message);
 
     if (message.command === 'getSourceFields') {
-        const { bemsId, siteRequesting, selectedProcess, isDragAndDropChecked } = message;
+        const { bemsId,selectedSiteRequesting, selectedProcess, isDragAndDropChecked } = message;
         const sourceFields = {};
-        getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropChecked, sourceFields);
+        getSourceFields(bemsId,selectedSiteRequesting, selectedProcess, isDragAndDropChecked, sourceFields);
         sendResponse({ sourceFields });
     } else if (message.command === 'setDestinationFields') {
         const { destinationFields, selectedProcess, isDragAndDropChecked } = message;
@@ -211,14 +211,14 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropChecked, sourceFields) {
+function getSourceFields(bemsId,selectedSiteRequesting, selectedProcess, isDragAndDropChecked, sourceFields) {
     if (selectedProcess === 'AdHoc') {
         console.log('getSourceFields called with adhoc process')
         // Implement the logic for the Ad Hoc process
         adHocFieldsMappings.forEach((mapping) => {
-            // Handle the custom function for extension user bemsId and siteRequesting values
+            // Handle the custom function for extension user bemsId andselectedSiteRequesting values
             if (mapping.customFunction) {
-                const customValues = mapping.customFunction(bemsId, siteRequesting);
+                const customValues = mapping.customFunction(bemsId,selectedSiteRequesting);
                 Object.assign(sourceFields, customValues);
             } else {
                 const sourceElement = document.querySelector(mapping.source);
@@ -312,9 +312,9 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
             // Implement the logic for the drag and drop option
             console.log('Drag and drop option selected');
             dragNDropFieldsMappings.forEach((mapping) => {
-                // Handle the custom function for extension user bemsId and siteRequesting values
+                // Handle the custom function for extension user bemsId andselectedSiteRequesting values
                 if (mapping.customFunction) {
-                    const customValues = mapping.customFunction(bemsId, siteRequesting);
+                    const customValues = mapping.customFunction(bemsId,selectedSiteRequesting);
                     Object.assign(sourceFields, customValues);
                 } else {
                     const sourceElement = document.querySelector(mapping.source);
@@ -409,9 +409,9 @@ function getSourceFields(bemsId, siteRequesting, selectedProcess, isDragAndDropC
         } else {
             console.log('Drag and drop option not selected');
             hardcopyFieldsMappings.forEach((mapping) => {
-                // Handle the custom function for extension user bemsId and siteRequesting values
+                // Handle the custom function for extension user bemsId andselectedSiteRequesting values
                 if (mapping.customFunction) {
-                    const customValues = mapping.customFunction(bemsId, siteRequesting);
+                    const customValues = mapping.customFunction(bemsId,selectedSiteRequesting);
                     Object.assign(sourceFields, customValues);
                 } else {
                     const sourceElement = document.querySelector(mapping.source);

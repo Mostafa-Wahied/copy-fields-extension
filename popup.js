@@ -1,11 +1,24 @@
 console.log('popup.js loaded');
+const siteRequestingDropdown = document.querySelector('#siteRequestingDropdown');
 const processDropdown = document.querySelector('#processDropdown');
 const hardcopyOptions = document.querySelector('#hardcopyOptions');
 const dragAndDropCheckbox = document.querySelector('#dragAndDropCheckbox');
 
+siteRequestingDropdown.addEventListener('change', () => {
+    const selectedSiteRequesting = siteRequestingDropdown.value;
+    console.log('From popup.js Site Requesting dropdown change event triggered:', selectedSiteRequesting);
+    browser.storage.local.set({ selectedSiteRequesting });
+
+    // Send a message to content.js to update the behavior or order of the elements
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+        console.log('Selected tabs:', tabs);
+        browser.tabs.sendMessage(tabs[0].id, { command: 'updateSiteRequesting', selectedSiteRequesting });
+    });
+});
+
 processDropdown.addEventListener('change', () => {
     const selectedProcess = processDropdown.value;
-    console.log('Process dropdown change event triggered:', selectedProcess);
+    console.log('From popup.js Process dropdown change event triggered:', selectedProcess);
     browser.storage.local.set({ selectedProcess });
 
     // For updating the hardcopy options display
@@ -54,7 +67,9 @@ browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
 
 document.getElementById('copyFields').addEventListener('click', () => {
     const bemsId = document.querySelector('#bemsId').value;
-    const siteRequesting = document.querySelector('#siteRequesting').value;
+    const selectedSiteRequesting = siteRequestingDropdown.value;
+    console.log('From popup.js Copy Fields button clicked:', bemsId, selectedSiteRequesting);
+    // const siteRequesting = document.querySelector('#siteRequesting').value;
     const selectedProcess = processDropdown.value;
     const dragAndDropCheckbox = document.querySelector('#dragAndDropCheckbox');
     const isDragAndDropChecked = dragAndDropCheckbox && dragAndDropCheckbox.checked;
@@ -72,7 +87,7 @@ document.getElementById('copyFields').addEventListener('click', () => {
         });
 
         if (sourceTab && destinationTab) {
-            browser.tabs.sendMessage(sourceTab.id, { command: 'getSourceFields', bemsId, siteRequesting, selectedProcess, isDragAndDropChecked }).then((response) => {
+            browser.tabs.sendMessage(sourceTab.id, { command: 'getSourceFields', bemsId, selectedSiteRequesting, selectedProcess, isDragAndDropChecked }).then((response) => {
                 const { sourceFields } = response;
                 browser.tabs.sendMessage(destinationTab.id, { command: 'setDestinationFields', destinationFields: sourceFields, selectedProcess, isDragAndDropChecked });
             });
@@ -80,8 +95,19 @@ document.getElementById('copyFields').addEventListener('click', () => {
     });
 });
 
-
 function updateHardcopyOptionsDisplay(selectedProcess) {
     hardcopyOptions.style.display = selectedProcess === 'Hardcopy' ? 'block' : 'none';
 }
 
+// save the bemsId input value to storage
+document.getElementById('bemsId').addEventListener('input', function (event) {
+    const bemsId = event.target.value;
+    browser.storage.local.set({ bemsId });
+});
+// get the bemsId from storage and set the input value
+browser.storage.local.get('bemsId').then((result) => {
+    const bemsId = result.bemsId;
+    if (bemsId) {
+        document.getElementById('bemsId').value = bemsId;
+    }
+});
