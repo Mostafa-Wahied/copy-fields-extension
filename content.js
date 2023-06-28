@@ -25,14 +25,14 @@ const adHocFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(16)', destination: '#orderTime' },
     {
         destination: '#ordDeskUser',
-        customFunction: (bemsId,selectedSiteRequesting) => {
+        customFunction: (bemsId, selectedSiteRequesting) => {
             return { '#ordDeskUser': bemsId };
         },
     },
     {
         destination: '#siteRequestingComboboxInput',
-        customFunction: (bemsId,selectedSiteRequesting) => {
-            return { '#siteRequestingComboboxInput':selectedSiteRequesting };
+        customFunction: (bemsId, selectedSiteRequesting) => {
+            return { '#siteRequestingComboboxInput': selectedSiteRequesting };
         },
     },
 ];
@@ -73,14 +73,14 @@ const hardcopyFieldsMappings = [
 
     {
         destination: '#ordDeskUser',
-        customFunction: (bemsId,selectedSiteRequesting) => {
+        customFunction: (bemsId, selectedSiteRequesting) => {
             return { '#ordDeskUser': bemsId };
         },
     },
     {
         destination: '#siteRequestingComboboxInput',
-        customFunction: (bemsId,selectedSiteRequesting) => {
-            return { '#siteRequestingComboboxInput':selectedSiteRequesting };
+        customFunction: (bemsId, selectedSiteRequesting) => {
+            return { '#siteRequestingComboboxInput': selectedSiteRequesting };
         },
     },
 ];
@@ -149,14 +149,14 @@ const dragNDropFieldsMappings = [
 
     {
         destination: '#ordDeskUser',
-        customFunction: (bemsId,selectedSiteRequesting) => {
+        customFunction: (bemsId, selectedSiteRequesting) => {
             return { '#ordDeskUser': bemsId };
         },
     },
     {
         destination: '#siteRequestingComboboxInput',
-        customFunction: (bemsId,selectedSiteRequesting) => {
-            return { '#siteRequestingComboboxInput':selectedSiteRequesting };
+        customFunction: (bemsId, selectedSiteRequesting) => {
+            return { '#siteRequestingComboboxInput': selectedSiteRequesting };
         },
     },
 ];
@@ -188,9 +188,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Message received:', message);
 
     if (message.command === 'getSourceFields') {
-        const { bemsId,selectedSiteRequesting, selectedProcess, isDragAndDropChecked } = message;
+        const { bemsId, selectedSiteRequesting, selectedProcess, isDragAndDropChecked } = message;
         const sourceFields = {};
-        getSourceFields(bemsId,selectedSiteRequesting, selectedProcess, isDragAndDropChecked, sourceFields);
+        getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDragAndDropChecked, sourceFields);
         sendResponse({ sourceFields });
     } else if (message.command === 'setDestinationFields') {
         const { destinationFields, selectedProcess, isDragAndDropChecked } = message;
@@ -205,20 +205,29 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Add the getPageType message handler here for defaulting the process dropdown to AdHoc or Hardcopy
     if (message.command === 'getPageType') {
         const adHocElement = document.querySelector('body > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > span:nth-child(1) > a:nth-child(1)');
-        const pageType = adHocElement === null ? 'AdHoc' : 'Hardcopy';
+        // Check if tab url has 'cobs' in it, if yes the pageType is HAS,
+        // else check if adHocElement is null, if yes the pageType is AdHoc, else the pageType is Hardcopy
+        const tabUrl = window.location.href;
+        let pageType;
+        if (tabUrl.includes('cobs')) {
+            pageType = 'HAS';
+        } else {
+            pageType = adHocElement === null ? 'AdHoc' : 'Hardcopy';
+        }
+
         console.log("from content.js pageType:", pageType)
         sendResponse({ pageType });
     }
 });
 
-function getSourceFields(bemsId,selectedSiteRequesting, selectedProcess, isDragAndDropChecked, sourceFields) {
+function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDragAndDropChecked, sourceFields) {
     if (selectedProcess === 'AdHoc') {
         console.log('getSourceFields called with adhoc process')
         // Implement the logic for the Ad Hoc process
         adHocFieldsMappings.forEach((mapping) => {
             // Handle the custom function for extension user bemsId andselectedSiteRequesting values
             if (mapping.customFunction) {
-                const customValues = mapping.customFunction(bemsId,selectedSiteRequesting);
+                const customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
                 Object.assign(sourceFields, customValues);
             } else {
                 const sourceElement = document.querySelector(mapping.source);
@@ -314,7 +323,7 @@ function getSourceFields(bemsId,selectedSiteRequesting, selectedProcess, isDragA
             dragNDropFieldsMappings.forEach((mapping) => {
                 // Handle the custom function for extension user bemsId andselectedSiteRequesting values
                 if (mapping.customFunction) {
-                    const customValues = mapping.customFunction(bemsId,selectedSiteRequesting);
+                    const customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
                     Object.assign(sourceFields, customValues);
                 } else {
                     const sourceElement = document.querySelector(mapping.source);
@@ -411,7 +420,7 @@ function getSourceFields(bemsId,selectedSiteRequesting, selectedProcess, isDragA
             hardcopyFieldsMappings.forEach((mapping) => {
                 // Handle the custom function for extension user bemsId andselectedSiteRequesting values
                 if (mapping.customFunction) {
-                    const customValues = mapping.customFunction(bemsId,selectedSiteRequesting);
+                    const customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
                     Object.assign(sourceFields, customValues);
                 } else {
                     const sourceElement = document.querySelector(mapping.source);

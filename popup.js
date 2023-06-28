@@ -55,8 +55,10 @@ browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
 
             if (pageType === 'AdHoc') {
                 processDropdown.value = 'AdHoc';
-            } else {
+            } else if (pageType === 'Hardcopy') {
                 processDropdown.value = 'Hardcopy';
+            } else if (pageType === 'HAS') {
+                processDropdown.value = 'HAS';
             }
 
             // For updating the hardcopy options display
