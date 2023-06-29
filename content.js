@@ -35,6 +35,16 @@ const adHocFieldsMappings = [
             return { '#siteRequestingComboboxInput': selectedSiteRequesting };
         },
     },
+    {
+        destination: '#orderComments',
+        customFunction: () => {
+            const inputElement = document.querySelector('table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(2) input');
+            if (inputElement) {
+                return { '#orderComments': inputElement.value };
+            }
+            return {};
+        },
+    },
 ];
 
 const hardcopyFieldsMappings = [
@@ -48,6 +58,7 @@ const hardcopyFieldsMappings = [
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(11)', destination: '#otherSys' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
     { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#deliverTo' },
+    { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(2) textarea', destination: '#orderComments' },
     {
         destination: '#revision',
         customFunction: () => {
@@ -81,6 +92,16 @@ const hardcopyFieldsMappings = [
         destination: '#siteRequestingComboboxInput',
         customFunction: (bemsId, selectedSiteRequesting) => {
             return { '#siteRequestingComboboxInput': selectedSiteRequesting };
+        },
+    },
+    {
+        destination: '#orderComments',
+        customFunction: () => {
+            const inputElement = document.querySelector('table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(2) input');
+            if (inputElement) {
+                return { '#orderComments': inputElement.value };
+            }
+            return {};
         },
     },
 ];
@@ -146,7 +167,6 @@ const dragNDropFieldsMappings = [
             return {};
         },
     },
-
     {
         destination: '#ordDeskUser',
         customFunction: (bemsId, selectedSiteRequesting) => {
@@ -159,6 +179,106 @@ const dragNDropFieldsMappings = [
             return { '#siteRequestingComboboxInput': selectedSiteRequesting };
         },
     },
+];
+
+const HASFieldsMappings = [
+    { source: '#txtDrawNo1', destination: '#drawingNumber' },
+    { source: '#txtSheet1', destination: '#sheetId' },
+    { source: '#txtRev1', destination: '#revision' },
+    { source: 'table.DisplayText:nth-child(4) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(2) > input:nth-child(1)', destination: '#disclosureValueComboboxInput' },
+    { source: 'div.feature:nth-child(3) > table:nth-child(1) > tbody:nth-child(3) > tr:nth-child(2) > td:nth-child(4)', destination: '#custBemsid' },
+    { source: 'div.feature:nth-child(3) > table:nth-child(1) > tbody:nth-child(3) > tr:nth-child(3) > td:nth-child(4)', destination: '#deliverTo' },
+    { source: 'td.NormalTextCenter:nth-child(5)', destination: '#buLocDept' },
+    { source: 'table#orderTitle tr td:nth-child(2) h2', destination: '#otherSys' },
+    { source: '#selFormat option:checked', destination: '#convCenterProdComboboxInput' },
+    { source: '#requireddt', destination: '#customerRequestDate' },
+    {
+        source: ['table#orderTitle tr td:nth-child(2) h2', '#selFormat option:checked'],
+        destination: '#orderComments',
+        customFunction: (sourceSelectors) => {
+            const otherSysElement = document.querySelector(sourceSelectors[0]);
+            const convCenterProdElement = document.querySelector(sourceSelectors[1]);
+            if (otherSysElement && convCenterProdElement) {
+                const otherSysValue = otherSysElement.textContent.trim();
+                const convCenterProdValue = convCenterProdElement.textContent.trim();
+
+                const combinedValue = `${convCenterProdValue} ${otherSysValue}`;
+                console.log('combinedValue', combinedValue);
+                return { '#orderComments': combinedValue };
+            } else {
+                console.log('otherSysElement or convCenterProdElement not found');
+            }
+            return {};
+        }
+    },
+    {
+        destination: '#ordDeskUser',
+        customFunction: (bemsId, selectedSiteRequesting) => {
+            return { '#ordDeskUser': bemsId };
+        },
+    },
+    {
+        destination: '#mediaComboboxInput',
+        customFunction: () => {
+            return { '#mediaComboboxInput': "S05" };
+        },
+    },
+    {
+        destination: '#convVendorComboboxInput',
+        customFunction: () => {
+            return { '#convVendorComboboxInput': "GEOMETRIC" };
+        },
+    },
+    {
+        destination: '#customerRequestTime',
+        customFunction: () => {
+            return { '#customerRequestTime': "23:59" };
+        },
+    },
+
+
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(2)', destination: '#drawingNumber' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(4)', destination: '#sheetId' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child > td:nth-child(5)', destination: '#revision' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(5)', destination: '#suppCode' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(2) td:nth-child(4)', destination: '#airplaneModelComboboxInput' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(1) td:nth-child(12) span select option:checked', destination: '#sitePerformingLocComboboxInput' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#buLocDept' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(1)', destination: '#deliverTo' },
+    // {
+    //     destination: '#customerRequestDate',
+    //     customFunction: () => {
+    //         const inputElement = document.querySelector('table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(6) input');
+    //         if (inputElement) {
+    //             return { '#customerRequestDate': inputElement.value };
+    //         }
+    //         return {};
+    //     },
+    // },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(16)', destination: '#customerRequestTime' },
+    // { source: 'table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:first-child td:nth-child(16)', destination: '#orderTime' },
+    // {
+    //     destination: '#ordDeskUser',
+    //     customFunction: (bemsId, selectedSiteRequesting) => {
+    //         return { '#ordDeskUser': bemsId };
+    //     },
+    // },
+    // {
+    //     destination: '#siteRequestingComboboxInput',
+    //     customFunction: (bemsId, selectedSiteRequesting) => {
+    //         return { '#siteRequestingComboboxInput': selectedSiteRequesting };
+    //     },
+    // },
+    // {
+    //     destination: '#orderComments',
+    //     customFunction: () => {
+    //         const inputElement = document.querySelector('table#bodyTable tr:not([style*="display: none"]) > td:first-child > table tr:nth-child(3) td:nth-child(2) input');
+    //         if (inputElement) {
+    //             return { '#orderComments': inputElement.value };
+    //         }
+    //         return {};
+    //     },
+    // },
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -225,7 +345,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
         console.log('getSourceFields called with adhoc process')
         // Implement the logic for the Ad Hoc process
         adHocFieldsMappings.forEach((mapping) => {
-            // Handle the custom function for extension user bemsId andselectedSiteRequesting values
+            // Handle the custom function for extension user bemsId and selectedSiteRequesting values
             if (mapping.customFunction) {
                 const customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
                 Object.assign(sourceFields, customValues);
@@ -234,7 +354,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                 if (sourceElement) {
                     let value = sourceElement.textContent.trim();
 
-                    // handle #priorityComboboxInput to format text to captialize first letter
+                    // handle #priorityComboboxInput to format text to capitalize first letter
                     if (mapping.destination === '#priorityComboboxInput') {
                         value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
                     }
@@ -321,7 +441,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
             // Implement the logic for the drag and drop option
             console.log('Drag and drop option selected');
             dragNDropFieldsMappings.forEach((mapping) => {
-                // Handle the custom function for extension user bemsId andselectedSiteRequesting values
+                // Handle the custom function for extension user bemsId and selectedSiteRequesting values
                 if (mapping.customFunction) {
                     const customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
                     Object.assign(sourceFields, customValues);
@@ -330,7 +450,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                     if (sourceElement) {
                         let value = sourceElement.textContent.trim();
 
-                        // handle #priorityComboboxInput to format text to captialize first letter
+                        // handle #priorityComboboxInput to format text to capitalize first letter
                         if (mapping.destination === '#priorityComboboxInput') {
                             value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
                         }
@@ -406,7 +526,6 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                             }
                         }
 
-
                         if (mapping.destination === '#orderComments') {
                             console.log('orderComments', value);
                         }
@@ -418,7 +537,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
         } else {
             console.log('Drag and drop option not selected');
             hardcopyFieldsMappings.forEach((mapping) => {
-                // Handle the custom function for extension user bemsId andselectedSiteRequesting values
+                // Handle the custom function for extension user bemsId and selectedSiteRequesting values
                 if (mapping.customFunction) {
                     const customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
                     Object.assign(sourceFields, customValues);
@@ -427,7 +546,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                     if (sourceElement) {
                         let value = sourceElement.textContent.trim();
 
-                        // handle #priorityComboboxInput to format text to captialize first letter
+                        // handle #priorityComboboxInput to format text to capitalize first letter
                         if (mapping.destination === '#priorityComboboxInput') {
                             value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
                         }
@@ -508,6 +627,83 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                 }
             });
         }
+    } else if (selectedProcess === 'HAS') {
+        console.log('getSourceFields called with HAS process')
+        // Implement the logic for the HAS process
+        HASFieldsMappings.forEach((mapping) => {
+            // Handle the custom function for extension user bemsId and selectedSiteRequesting values
+            if (mapping.customFunction) {
+                let customValues;
+                if (Array.isArray(mapping.source)) {
+                    // Handle the custom function for multiple source fields
+                    customValues = mapping.customFunction(mapping.source);
+                } else {
+                    // Handle the custom function for single source field
+                    customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
+                }
+                Object.assign(sourceFields, customValues);
+            } else {
+                const sourceElement = document.querySelector(mapping.source);
+                if (sourceElement) {
+                    let value = sourceElement.textContent.trim();
+
+                    // handle drawingNumber to only get the drawingNumber value
+                    if (mapping.source === '#txtDrawNo1') {
+                        const inputElement = document.querySelector('#txtDrawNo1');
+                        if (inputElement) {
+                            value = inputElement.value.split(' ')[0];
+                        }
+                        console.log('drawingNumber: ', value);
+                    }
+                    // handle sheetId to only get the sheetId value
+                    if (mapping.source === '#txtSheet1') {
+                        const inputElement = document.querySelector('#txtSheet1');
+                        if (inputElement) {
+                            value = inputElement.value;
+                        }
+                    }
+                    // handle revision to only get the revision value
+                    if (mapping.source === '#txtRev1') {
+                        const inputElement = document.querySelector('#txtRev1');
+                        if (inputElement) {
+                            value = inputElement.value;
+                        }
+                    }
+                    // handle disclosureValueComboboxInput to only get the value
+                    if (mapping.destination === '#disclosureValueComboboxInput') {
+                        // check if the checkbox is checked
+                        if (sourceElement.checked) {
+                            value = 'MIL';
+                        } else {
+                            value = 'COM';
+                        }
+                    }
+                    // Handle BuLocDept to only get the buLocDept value without whitespaces
+                    if (mapping.destination === '#buLocDept') {
+                        budget = value.replace(/\s+/g, '');
+                        value = budget;
+                    }
+                    // Handle convCenterProdComboboxInput
+                    if (mapping.destination === '#convCenterProdComboboxInput') {
+                        if (value === 'CATIA V5 - CATDrawing, CATPart' || value === 'CATIA V5 - CATDrawing') {
+                            value = 'CATIA VERSION - 5';
+                        } else {
+                            value = "";
+                        }
+                    }
+                    // handle customerRequestDate to only get the drawingNumber value
+                    if (mapping.source === '#requireddt') {
+                        const inputElement = document.querySelector('#requireddt');
+                        if (inputElement) {
+                            value = inputElement.value;
+                        }
+                    }
+
+
+                    sourceFields[mapping.destination] = value;
+                }
+            }
+        });
     }
 }
 
@@ -588,17 +784,44 @@ function setDestinationFields(destinationFields, selectedProcess, isDragAndDropC
                 }
             });
         }
+    } else if (selectedProcess === 'HAS') {
+        // Implement the logic for the HAS process
+        HASFieldsMappings.forEach((mapping) => {
+            const destinationElement = document.querySelector(mapping.destination);
+            if (destinationElement && destinationFields[mapping.destination]) {
+                // Set the value of dropdown fields by selecting the corresponding option
+                if (destinationElement.tagName === 'SELECT') {
+                    const optionToSelect = Array.from(destinationElement.options).find(option => option.value === destinationFields[mapping.destination]);
+                    if (optionToSelect) {
+                        optionToSelect.selected = true;
+
+                        // Dispatch a change event to simulate a user selection
+                        const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+                        destinationElement.dispatchEvent(changeEvent);
+                    }
+                } else {
+                    destinationElement.value = destinationFields[mapping.destination];
+                }
+
+                // Dispatch an input event to simulate user input
+                const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+                destinationElement.dispatchEvent(inputEvent);
+            }
+        });
     }
 }
 
 function updateElementsForSelectedProcess(selectedProcess) {
-    console.log('updateElementsForSelectedProcess called with:', selectedProcess);
+    console.log('updateElementsForSelectedProcess called with:', "selectedProcess: ", selectedProcess);
     if (selectedProcess === 'AdHoc') {
         // Implement the logic for the Ad Hoc process
         console.log('Ad Hoc process selected');
     } else if (selectedProcess === 'Hardcopy') {
         // Implement the logic for the Hardcopy process
         console.log('Hardcopy process selected');
+    } else if (selectedProcess === 'HAS') {
+        // Implement the logic for the HAS process
+        console.log('HAS process selected');
     }
 }
 

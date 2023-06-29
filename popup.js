@@ -83,6 +83,8 @@ document.getElementById('copyFields').addEventListener('click', () => {
         tabs.forEach((tab) => {
             if (tab.url.includes('adads')) {
                 sourceTab = tab;
+            } else if (tab.url.includes('cobs')) {
+                sourceTab = tab;
             } else if (tab.url.includes('eimmt')) {
                 destinationTab = tab;
             }
