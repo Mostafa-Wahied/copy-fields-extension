@@ -195,32 +195,36 @@ const HASFieldsMappings = [
     {
         source: ['table#orderTitle tr td:nth-child(2) h2', '#selFormat option:checked'],
         destination: '#orderComments',
-        customFunction: (sourceSelectors) => {
-            console.log('sourceSelectors', sourceSelectors);
-            const otherSysElement = document.querySelector(sourceSelectors[0]);
-            const convCenterProdElement = document.querySelector(sourceSelectors[1]);
-            if (otherSysElement && convCenterProdElement) {
-                console.log('otherSysElement and convCenterProdElement found')
-                const otherSysValue = otherSysElement.textContent.trim();
-                let convCenterProdValue = convCenterProdElement.textContent.trim();
-                console.log('convCenterProdValue: ', convCenterProdValue);
-                if (convCenterProdValue === 'CATIA V5 - CATDrawing, CATPart') {
-                    convCenterProdValue = 'Catia V5 CATDrawing, CATPart DPI 500';
-                } else if (convCenterProdValue === 'CATIA V5 - CATDrawing') {
-                    convCenterProdValue = 'Catia V5 CATDrawing DPI 500';
-                } else if (convCenterProdValue === 'Geometry - TIFF') {
-                    convCenterProdValue = 'Geometry TIFF DPI 1000';
-                } else {
-                    convCenterProdValue = '';
-                }
-                const combinedValue = `${convCenterProdValue} ${otherSysValue}`;
-                return { '#orderComments': combinedValue };
-            } else {
-                console.log('otherSysElement or convCenterProdElement not found');
-            }
-            return {};
-        }
     },
+    // {
+    //     source: ['table#orderTitle tr td:nth-child(2) h2', '#selFormat option:checked'],
+    //     destination: '#orderComments',
+    //     customFunction: (sourceSelectors) => {
+    //         console.log('sourceSelectors', sourceSelectors);
+    //         const otherSysElement = document.querySelector(sourceSelectors[0]);
+    //         const convCenterProdElement = document.querySelector(sourceSelectors[1]);
+    //         if (otherSysElement && convCenterProdElement) {
+    //             console.log('otherSysElement and convCenterProdElement found')
+    //             const otherSysValue = otherSysElement.textContent.trim();
+    //             let convCenterProdValue = convCenterProdElement.textContent.trim();
+    //             console.log('convCenterProdValue: ', convCenterProdValue);
+    //             if (convCenterProdValue === 'CATIA V5 - CATDrawing, CATPart') {
+    //                 convCenterProdValue = 'Catia V5 CATDrawing, CATPart DPI 500';
+    //             } else if (convCenterProdValue === 'CATIA V5 - CATDrawing') {
+    //                 convCenterProdValue = 'Catia V5 CATDrawing DPI 500';
+    //             } else if (convCenterProdValue === 'Geometry - TIFF') {
+    //                 convCenterProdValue = 'Geometry TIFF DPI 1000';
+    //             } else {
+    //                 convCenterProdValue = '';
+    //             }
+    //             const combinedValue = `${convCenterProdValue} ${otherSysValue}`;
+    //             return { '#orderComments': combinedValue };
+    //         } else {
+    //             console.log('otherSysElement or convCenterProdElement not found');
+    //         }
+    //         return {};
+    //     }
+    // },
     {
         destination: '#ordDeskUser',
         customFunction: (bemsId, selectedSiteRequesting) => {
@@ -643,14 +647,7 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
         HASFieldsMappings.forEach((mapping) => {
             // Handle the custom function for extension user bemsId and selectedSiteRequesting values
             if (mapping.customFunction) {
-                let customValues;
-                if (Array.isArray(mapping.source)) {
-                    // Handle the custom function for multiple source fields
-                    customValues = mapping.customFunction(mapping.source);
-                } else {
-                    // Handle the custom function for single source field
-                    customValues = mapping.customFunction(bemsId, selectedSiteRequesting);
-                }
+                const customValues = mapping.customFunction();
                 Object.assign(sourceFields, customValues);
             } else {
                 const sourceElement = document.querySelector(mapping.source);
@@ -710,7 +707,28 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                             value = inputElement.value;
                         }
                     }
-
+                    // Handle the custom logic for the #orderComments field
+                    if (mapping.destination === '#orderComments') {
+                        const otherSysElement = document.querySelector(mapping.source[0]);
+                        const convCenterProdElement = document.querySelector(mapping.source[1]);
+                        if (otherSysElement && convCenterProdElement) {
+                            const otherSysValue = otherSysElement.textContent.trim();
+                            let convCenterProdValue = convCenterProdElement.textContent.trim();
+                            if (convCenterProdValue === 'CATIA V5 - CATDrawing, CATPart') {
+                                convCenterProdValue = 'Catia V5 CATDrawing, CATPart DPI 500';
+                            } else if (convCenterProdValue === 'CATIA V5 - CATDrawing') {
+                                convCenterProdValue = 'Catia V5 CATDrawing DPI 500';
+                            } else if (convCenterProdValue === 'Geometry - TIFF') {
+                                convCenterProdValue = 'Geometry TIFF DPI 1000';
+                            } else {
+                                convCenterProdValue = '';
+                            }
+                            const combinedValue = `${convCenterProdValue} ${otherSysValue}`;
+                            value = combinedValue;
+                        } else {
+                            console.log('otherSysElement or convCenterProdElement not found');
+                        }
+                    }
 
                     sourceFields[mapping.destination] = value;
                 }
