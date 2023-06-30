@@ -31,6 +31,11 @@ The add-on will appear in the top right corner of your browser. If you need help
 This project was custom-built to improve efficiency of my team at my current workplace. Our work involves fulfilling order requests, and requires navigating between multiple databases, systems, and processes to gather relevant data to fulfill the order in a timely manner. Seeing an opportunity to automate this process, I used my programming background to develop Field Copier. The extension is designed to be lightweight, customizable to various workflows and processes, and simple for users to adopt. I developed, piloted, and trained the team on the extension. As a result, our team's efficiency improved, and we successfully increased the fulfillment rate for requests.
 
 ### Changelog
+V 1.0.6
+- Add comments from all processes
+- Add HAS to dropdown
+- Add HAS elements and logic
+
 V 1.0.5
 - Fix mailstop conflict
 - Change Site Requesting into dropdown
