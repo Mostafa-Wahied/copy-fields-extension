@@ -196,14 +196,24 @@ const HASFieldsMappings = [
         source: ['table#orderTitle tr td:nth-child(2) h2', '#selFormat option:checked'],
         destination: '#orderComments',
         customFunction: (sourceSelectors) => {
+            console.log('sourceSelectors', sourceSelectors);
             const otherSysElement = document.querySelector(sourceSelectors[0]);
             const convCenterProdElement = document.querySelector(sourceSelectors[1]);
             if (otherSysElement && convCenterProdElement) {
+                console.log('otherSysElement and convCenterProdElement found')
                 const otherSysValue = otherSysElement.textContent.trim();
-                const convCenterProdValue = convCenterProdElement.textContent.trim();
-
+                let convCenterProdValue = convCenterProdElement.textContent.trim();
+                console.log('convCenterProdValue: ', convCenterProdValue);
+                if (convCenterProdValue === 'CATIA V5 - CATDrawing, CATPart') {
+                    convCenterProdValue = 'Catia V5 CATDrawing, CATPart DPI 500';
+                } else if (convCenterProdValue === 'CATIA V5 - CATDrawing') {
+                    convCenterProdValue = 'Catia V5 CATDrawing DPI 500';
+                } else if (convCenterProdValue === 'Geometry - TIFF') {
+                    convCenterProdValue = 'Geometry TIFF DPI 1000';
+                } else {
+                    convCenterProdValue = '';
+                }
                 const combinedValue = `${convCenterProdValue} ${otherSysValue}`;
-                console.log('combinedValue', combinedValue);
                 return { '#orderComments': combinedValue };
             } else {
                 console.log('otherSysElement or convCenterProdElement not found');
@@ -687,6 +697,8 @@ function getSourceFields(bemsId, selectedSiteRequesting, selectedProcess, isDrag
                     if (mapping.destination === '#convCenterProdComboboxInput') {
                         if (value === 'CATIA V5 - CATDrawing, CATPart' || value === 'CATIA V5 - CATDrawing') {
                             value = 'CATIA VERSION - 5';
+                        } else if (value === 'Geometry - TIFF') {
+                            value = 'TIFF FILE';
                         } else {
                             value = "";
                         }
