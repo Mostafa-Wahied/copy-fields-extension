@@ -1,5 +1,11 @@
-
 ### Field Copier Extension
+
+![fieldcopier](https://github.com/Mostafa-Wahied/copy-fields-extension/assets/97263286/1b63d21a-8f90-4773-bf68-b6377819a546)
+
+### Background
+This project was custom-built to improve efficiency of my team at my current workplace. Our work involves fulfilling order requests, and requires navigating between multiple databases, systems, and processes to gather relevant data to fulfill the order in a timely manner. Seeing an opportunity to automate this process, I used my programming background to develop Field Copier. The extension is designed to be lightweight, customizable to various workflows and processes, and simple for users to adopt. I developed, piloted, and trained the team on the extension. As a result, our team's efficiency improved, and we successfully increased the fulfillment rate for requests.
+
+### Description
 Field Copier is a Firefox extension designed to streamline the process of copying and mapping fields between two platforms. Developed using JavaScript and Bootstrap, this extension automates the process of transferring data between multiple systems, increasing productivity and efficiency.
 
 ### Features
@@ -26,11 +32,6 @@ The add-on will appear in the top right corner of your browser. If you need help
  - The extension will automatically detect the current page type and set the dropdown value accordingly.
  - If you are processing a Drag & Drop, you can enable the Drag & Drop feature by checking the box.
  - Click the "Copy Fields" button to copy the fields from the source platform to the destination platform based on the selected process and options.
-
-![fieldcopier](https://github.com/Mostafa-Wahied/copy-fields-extension/assets/97263286/1b63d21a-8f90-4773-bf68-b6377819a546)
-
-### Background
-This project was custom-built to improve efficiency of my team at my current workplace. Our work involves fulfilling order requests, and requires navigating between multiple databases, systems, and processes to gather relevant data to fulfill the order in a timely manner. Seeing an opportunity to automate this process, I used my programming background to develop Field Copier. The extension is designed to be lightweight, customizable to various workflows and processes, and simple for users to adopt. I developed, piloted, and trained the team on the extension. As a result, our team's efficiency improved, and we successfully increased the fulfillment rate for requests.
 
 ### Changelog
 V 1.0.6
